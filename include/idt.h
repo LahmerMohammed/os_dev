@@ -26,15 +26,16 @@
 
 
 
-#define KERNEL_CS 0x00
+#define KERNEL_CS 0x08
 
+#define IDT_ENTRIES 256
 
 typedef struct {
 
         uint16 low_offset; // of base address
         uint16 selector;
         uint8 always_zero;
-        unit8 falgs;
+        uint8 flags;
         uint16 high_offset; // of base address
 } __attribute__((packed)) idt_entry;
 
@@ -43,8 +44,15 @@ typedef struct {
         uint16 limit;
         uint32 base;
 
-} __attribute__((packed)) idt_register_table; 
+} __attribute__((packed)) idt_descriptor; 
+
+static idt_entry idt_t[IDT_ENTRIES];
+
+static idt_descriptor idt_reg;
 
 
+void set_idt_entry(int n , uint32 handler);
+
+void set_idt();
 
 #endif
