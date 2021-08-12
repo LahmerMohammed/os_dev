@@ -4,8 +4,4 @@
 void kmain()
 {
 	initScreen();
-	while (1)
-	{
-		string str = readInput();
-	}
 }
