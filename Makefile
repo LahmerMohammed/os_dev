@@ -13,7 +13,7 @@ EMULATOR = qemu-system-i386
 EMULATOR_FLAG = -kernel
 
 
-SRCS = ./src/kernel.c ./src/keyboard.c ./src/screen.c ./src/string.c ./src/system.c ./src/idt.c
+SRCS = ./src/kernel.c ./src/keyboard.c ./src/screen.c ./src/string.c ./src/system.c 
 
 OBJS =  ./obj/boot.o\
 ./obj/kernel.o\
@@ -21,7 +21,6 @@ OBJS =  ./obj/boot.o\
 ./obj/screen.o\
 ./obj/system.o\
 ./obj/string.o\
-./obj/idt.o\
 
 
 

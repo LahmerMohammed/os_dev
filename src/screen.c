@@ -32,11 +32,8 @@ void initScreen()
 	clearScreen();
 
 	uint16 str_size = strSize(USER);
-	string user = USER;
-	for (uint16 i = 0; i < str_size; i++)
-	{
-		print_char(user[i]);
-	}
+	
+	print(USER);
 
 	cursorX = strSize(USER) - 1;
 	cursorY = 0;

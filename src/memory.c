@@ -18,7 +18,6 @@
 #include <memory.h>
 
 
-
 void memcpy( uint8 *source , uint8 *destination , int nbytes)
 {
 		for( ; nbytes > 0 ; nbytes-- )
