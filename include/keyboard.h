@@ -1,111 +1,124 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#define KEYBOARD_STATUS 0x64
-#define GET_BUTTON 0x60
-
-#define NULL_CHARACTER 0x00
-
 
 #include"screen.h"
 #include"types.h"
 #include"system.h"
-#include"ascii.h"
-#include "keyboard.h"
-#include"keymap.h"
 
 
-#define KEYMAP_SHIFT 1
-#define KEYMAP_ALT   2
-#define KEYMAP_CTRL  3
-#define KEYMAP_CAPSLOCK 4
+// PC keyboard interface constants
 
-string readInput();
+#define KBSTATP         0x64    // kbd controller status port(I)
+#define KBS_DIB         0x01    // kbd data in buffer
+#define KBDATAP         0x60    // kbd data port(I)
 
-char scancodeToAscii(uint8 scancode);
+#define NO              0
 
-void initKeyboard();
+#define SHIFT           (1<<0)
+#define CTL             (1<<1)
+#define ALT             (1<<2)
+
+#define CAPSLOCK        (1<<3)
+#define NUMLOCK         (1<<4)
+#define SCROLLLOCK      (1<<5)
+
+#define E0ESC           (1<<6)
+
+// Special keycodes
+#define KEY_HOME        0xE0
+#define KEY_END         0xE1
+#define KEY_UP          0xE2
+#define KEY_DN          0xE3
+#define KEY_LF          0xE4
+#define KEY_RT          0xE5
+#define KEY_PGUP        0xE6
+#define KEY_PGDN        0xE7
+#define KEY_INS         0xE8
+#define KEY_DEL         0xE9
 
 
+// C('A') == Control-A
+#define C(x) (x - '@')
 
-
-enum KEYCODE {
-	NULL_KEY = 0,
-	Q_PRESSED = 0x10,
-	Q_RELEASED = 0x90,
-	W_PRESSED = 0x11,
-	W_RELEASED = 0x91,
-	E_PRESSED = 0x12,
-	E_RELEASED = 0x92,
-	R_PRESSED = 0x13,
-	R_RELEASED = 0x93,
-	T_PRESSED = 0x14,
-	T_RELEASED = 0x94,
-	Z_PRESSED = 0x15,
-	Z_RELEASED = 0x95,
-	U_PRESSED = 0x16,
-	U_RELEASED = 0x96,
-	I_PRESSED = 0x17,
-	I_RELEASED = 0x97,
-	O_PRESSED = 0x18,
-	O_RELEASED = 0x98,
-	P_PRESSED = 0x19,
-	P_RELEASED = 0x99,
-	A_PRESSED = 0x1E,
-	A_RELEASED = 0x9E,
-	S_PRESSED = 0x1F,
-	S_RELEASED = 0x9F,
-	D_PRESSED = 0x20,
-	D_RELEASED = 0xA0,
-	F_PRESSED = 0x21,
-	F_RELEASED = 0xA1,
-	G_PRESSED = 0x22,
-	G_RELEASED = 0xA2,
-	H_PRESSED = 0x23,
-	H_RELEASED = 0xA3,
-	J_PRESSED = 0x24,
-	J_RELEASED = 0xA4,
-	K_PRESSED = 0x25,
-	K_RELEASED = 0xA5,
-	L_PRESSED = 0x26,
-	L_RELEASED = 0xA6,
-	Y_PRESSED = 0x2C,
-	Y_RELEASED = 0xAC,
-	X_PRESSED = 0x2D,
-	X_RELEASED = 0xAD,
-	C_PRESSED = 0x2E,
-	C_RELEASED = 0xAE,
-	V_PRESSED = 0x2F,
-	V_RELEASED = 0xAF,
-	B_PRESSED = 0x30,
-	B_RELEASED = 0xB0,
-	N_PRESSED = 0x31,
-	N_RELEASED = 0xB1,
-	M_PRESSED = 0x32,
-	M_RELEASED = 0xB2,
-
-	ZERO_PRESSED = 0x29,
-	ONE_PRESSED = 0x2,
-	NINE_PRESSED = 0xA,
-
-	POINT_PRESSED = 0x34,
-	POINT_RELEASED = 0xB4,
-
-	SLASH_RELEASED = 0xB5,
-
-	BACKSPACE_PRESSED = 0xE,
-	BACKSPACE_RELEASED = 0x8E,
-	SPACE_PRESSED = 0x39,
-	SPACE_RELEASED = 0xB9,
-	ENTER_PRESSED = 0x1C,
-	ENTER_RELEASED = 0x9C,
-
+static uint8 shiftcode[256] =
+{
+  [0x1D] CTL,
+  [0x2A] SHIFT,
+  [0x36] SHIFT,
+  [0x38] ALT,
+  [0x9D] CTL,
+  [0xB8] ALT
 };
 
+static uint8 togglecode[256] =
+{
+  [0x3A] CAPSLOCK,
+  [0x45] NUMLOCK,
+  [0x46] SCROLLLOCK
+};
 
+static uint8 normalmap[256] =
+{
+  NO,   0x1B, '1',  '2',  '3',  '4',  '5',  '6',  // 0x00
+  '7',  '8',  '9',  '0',  '-',  '=',  '\b', '\t',
+  'q',  'w',  'e',  'r',  't',  'y',  'u',  'i',  // 0x10
+  'o',  'p',  '[',  ']',  '\n', NO,   'a',  's',
+  'd',  'f',  'g',  'h',  'j',  'k',  'l',  ';',  // 0x20
+  '\'', '`',  NO,   '\\', 'z',  'x',  'c',  'v',
+  'b',  'n',  'm',  ',',  '.',  '/',  NO,   '*',  // 0x30
+  NO,   ' ',  NO,   NO,   NO,   NO,   NO,   NO,
+  NO,   NO,   NO,   NO,   NO,   NO,   NO,   '7',  // 0x40
+  '8',  '9',  '-',  '4',  '5',  '6',  '+',  '1',
+  '2',  '3',  '0',  '.',  NO,   NO,   NO,   NO,   // 0x50
+  [0x9C] '\n',      // KP_Enter
+  [0xB5] '/',       // KP_Div
+  [0xC8] KEY_UP,    [0xD0] KEY_DN,
+  [0xC9] KEY_PGUP,  [0xD1] KEY_PGDN,
+  [0xCB] KEY_LF,    [0xCD] KEY_RT,
+  [0x97] KEY_HOME,  [0xCF] KEY_END,
+  [0xD2] KEY_INS,   [0xD3] KEY_DEL
+};
 
+static uint8 shiftmap[256] =
+{
+  NO,   033,  '!',  '@',  '#',  '$',  '%',  '^',  // 0x00
+  '&',  '*',  '(',  ')',  '_',  '+',  '\b', '\t',
+  'Q',  'W',  'E',  'R',  'T',  'Y',  'U',  'I',  // 0x10
+  'O',  'P',  '{',  '}',  '\n', NO,   'A',  'S',
+  'D',  'F',  'G',  'H',  'J',  'K',  'L',  ':',  // 0x20
+  '"',  '~',  NO,   '|',  'Z',  'X',  'C',  'V',
+  'B',  'N',  'M',  '<',  '>',  '?',  NO,   '*',  // 0x30
+  NO,   ' ',  NO,   NO,   NO,   NO,   NO,   NO,
+  NO,   NO,   NO,   NO,   NO,   NO,   NO,   '7',  // 0x40
+  '8',  '9',  '-',  '4',  '5',  '6',  '+',  '1',
+  '2',  '3',  '0',  '.',  NO,   NO,   NO,   NO,   // 0x50
+  [0x9C] '\n',      // KP_Enter
+  [0xB5] '/',       // KP_Div
+  [0xC8] KEY_UP,    [0xD0] KEY_DN,
+  [0xC9] KEY_PGUP,  [0xD1] KEY_PGDN,
+  [0xCB] KEY_LF,    [0xCD] KEY_RT,
+  [0x97] KEY_HOME,  [0xCF] KEY_END,
+  [0xD2] KEY_INS,   [0xD3] KEY_DEL
+};
 
-
+static uint8 ctlmap[256] =
+{
+  NO,      NO,      NO,      NO,      NO,      NO,      NO,      NO,
+  NO,      NO,      NO,      NO,      NO,      NO,      NO,      NO,
+  C('Q'),  C('W'),  C('E'),  C('R'),  C('T'),  C('Y'),  C('U'),  C('I'),
+  C('O'),  C('P'),  NO,      NO,      '\r',    NO,      C('A'),  C('S'),
+  C('D'),  C('F'),  C('G'),  C('H'),  C('J'),  C('K'),  C('L'),  NO,
+  NO,      NO,      NO,      C('\\'), C('Z'),  C('X'),  C('C'),  C('V'),
+  C('B'),  C('N'),  C('M'),  NO,      NO,      C('/'),  NO,      NO,
+  [0x9C] '\r',      // KP_Enter
+  [0xB5] C('/'),    // KP_Div
+  [0xC8] KEY_UP,    [0xD0] KEY_DN,
+  [0xC9] KEY_PGUP,  [0xD1] KEY_PGDN,
+  [0xCB] KEY_LF,    [0xCD] KEY_RT,
+  [0x97] KEY_HOME,  [0xCF] KEY_END,
+  [0xD2] KEY_INS,   [0xD3] KEY_DEL
+};
 
 
 

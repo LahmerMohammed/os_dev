@@ -1,17 +1,30 @@
 #include <system.h>
 
-uint8 inportb(uint16 _port)
+
+
+inline uint8 inportb(uint16 port)
 {
 	uint8 result;
-	__asm__ __volatile__("in %%dx,%%al"
-						 : "=a"(result)
-						 : "d"(_port));
+	asm volatile("in %%dx,%%al" : "=a"(result) : "d"(port));
 	return result;
 }
 
-void outportb(uint16 port, uint8 data)
+inline void outportb(uint16 port, uint8 data)
 {
-	__asm__ __volatile__("outb %%al, %%dx"
-						 :
-						 : "a"(data), "d"(port));
+	asm volatile("outb %%al, %%dx" :: "a"(data), "d"(port));
+}
+
+
+inline uint16 inportw(uint16 port) {
+	
+	uint16 result;
+
+	asm volatile("inw %%dx,%%al" : "=a"(result) : "d"(port));
+
+	return result;
+}
+
+
+inline void outportw(uint16 port , uint16 data){
+	asm volatile("outw %%al,%%dl" :: "a"(data) , "d"(port));
 }

@@ -4,4 +4,5 @@
 void kmain()
 {
 	initScreen();
+	
 }

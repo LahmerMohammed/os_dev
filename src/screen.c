@@ -1,14 +1,14 @@
 #include <screen.h>
 
-unsigned int cursorX = 0, cursorY = 0;
+uint16 cursorX = 0,cursorY = 0;
 
 void clearLine(uint8 start, uint8 end)
 {
 
-	uint8 no_cell = SC_DEPTH * SC_WIDTH;
+	uint8 no_cell = SCREEN_DEPTH * SCREEN_WIDTH;
 
 	uint16 i = start * no_cell;
-	string fb = (string)FB_ADDRESS;
+	string fb = (string)VGA_ADDRESS;
 	uint8 no_line = end - start + 1;
 
 	for (; i < (no_cell * no_line); i++)
@@ -19,43 +19,41 @@ void clearLine(uint8 start, uint8 end)
 
 void updateCursor()
 {
-	uint16 pos = cursorY * SC_WIDTH + cursorX;
+	uint16 pos = cursorY * SCREEN_WIDTH + cursorX;
 
-	outportb(0x3D4, 0x0F); // low  8 bits
-	outportb(0x3D5, (uint8)(pos & 0xFF));
-	outportb(0x3D4, 0x0E); // high  8 bits
-	outportb(0x3D5, (uint8)((pos >> 8) & 0xFF));
+	// low  8 bits
+	outportb(0x3D4, 0x0F); 
+	outportb(0x3D5,(uint8)( pos & 0xFF));
+
+	// high  8 bits
+	outportb(0x3D4, 0x0E);
+	outportb(0x3D5,(uint8)(pos >> 8) & 0xFF);
 }
 
 void initScreen()
 {
-	clearScreen();
-
-	uint16 str_size = strSize(USER);
-	
-	print(USER);
-
-	cursorX = strSize(USER) - 1;
-	cursorY = 0;
+	clearScreen();	
+	cursorX = 10;
+	cursorY = 10;
 	updateCursor();
 }
 
 void clearScreen()
 {
-	clearLine(0, SC_HEIGHT - 1);
+	clearLine(0, SCREEN_HEIGHT - 1);
 }
 
 void scrollUp(uint8 no_lines)
 {
-	string fb = (string)FB_ADDRESS;
+	string fb = (string)VGA_ADDRESS;
 	uint16 i = 0;
 
-	for (; i < (SC_WIDTH * (SC_HEIGHT - 1) * SC_DEPTH); i++)
+	for (; i < (SCREEN_WIDTH * (SCREEN_HEIGHT - 1) * SCREEN_DEPTH); i++)
 	{
-		fb[i] = fb[i + SC_WIDTH * SC_DEPTH * no_lines];
+		fb[i] = fb[i + SCREEN_WIDTH * SCREEN_HEIGHT * no_lines];
 	}
 
-	clearLine(SC_HEIGHT - 1 - no_lines, SC_HEIGHT - 1);
+	clearLine(SCREEN_HEIGHT - 1 - no_lines, SCREEN_HEIGHT - 1);
 
 	if ((cursorY - no_lines) < 0)
 	{
@@ -72,62 +70,31 @@ void scrollUp(uint8 no_lines)
 
 void lastLineReach()
 {
-	if (cursorY == (SC_HEIGHT - 1))
+	if (cursorY == (SCREEN_HEIGHT - 1))
 		scrollUp(1);
 }
 
 void print_char(char ch)
 {
-	string fb = (string)FB_ADDRESS;
+	string fb = (string)VGA_ADDRESS;
 	switch (ch)
 	{
-	case (0x08):
-	{ // back-space
-		if ((cursorX >= 16 && cursorY == 0) || (cursorX > 0 && cursorY > 0))
-		{
-			cursorX--;
-			fb[(SC_WIDTH * cursorY + cursorX) * SC_DEPTH] = 0x00;
-		}
-		else if (cursorX == 0 && cursorY > 0)
-		{
-			cursorY--;
-			uint8 i = SC_WIDTH;
-			while ((cursorY > 0 && i >= 0) || (cursorY == 0 && i >= 16))
-			{
-				if (fb[(SC_WIDTH * cursorY + i - 1) * SC_DEPTH] != 0x00)
-					break;
-				i--;
-			}
-			cursorX = i + 1;
-		}
-		break;
-	}
-	case ('\r'):
-	{
-		cursorX = 0;
-		break;
-	}
-	case ('\t'):
-	{
-		cursorX += TAB_LENGTH;
-		break;
-	}
 	case ('\n'):
-	{
-		cursorX = 0;
-		cursorY++;
-		break;
-	}
+		{
+			cursorX = 0;
+			cursorY++;
+			break;
+		}
 	default:
-	{
-		uint16 pos = ((cursorY * SC_WIDTH) + cursorX) * SC_DEPTH;
-		fb[pos] = ch;
-		fb[pos + 1] = 0x0F;
-		cursorX++;
-		break;
+		{
+			uint16 pos = ((cursorY * SCREEN_WIDTH) + cursorX) * SCREEN_DEPTH;
+			fb[pos] = ch;
+			fb[pos + 1] = 0x0F;
+			cursorX++;
+			break;
+		}
 	}
-	}
-	if (cursorX >= SC_WIDTH)
+	if (cursorX >= SCREEN_WIDTH)
 	{
 		cursorX = 0;
 		cursorY++;
