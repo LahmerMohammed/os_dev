@@ -3,6 +3,7 @@
     "keyboard.h": "c",
     "memory.h": "c",
     "screen.h": "c",
-    "idt.h": "c"
+    "idt.h": "c",
+    "isr.h": "c"
   }
 }
