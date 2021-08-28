@@ -21,6 +21,8 @@ OBJS =./stdio/keyboard.o\
 ./string/memory.o
 
 
+compile: ./string/%.o ./stdio/%.o
+	echo "libc compiler successfully ..."
 
 ./string/%.o: ./string/%.c
 	$(CC) $(GCCFLAGS) $< -o $@
@@ -28,21 +30,5 @@ OBJS =./stdio/keyboard.o\
 ./stdio/%.o: ./stdio/%.c
 	$(CC) $(GCCFLAGS) $< -o $@
 
-#./obj/keyboard.o: ./src/keyboard.c
-#	$(CC) $(GCCFLAGS) $< -o $@
-
-#./obj/string.o: ./src/string.c
-#	$(CC) $(GCCFLAGS) $< -o $@
-
-#./obj/idt.o: ./src/idt.c
-#	$(CC) $(GCCFLAGS) $< -o $@
-
-#./obj/screen.o: ./src/screen.c
-#	$(CC) $(GCCFLAGS) $< -o $@
-
-#./obj/system.o: ./src/system.c
-#	$(CC) $(GCCFLAGS) $< -o $@
-
 clean:
-	rm -rf  boot/
-	rm -rf obj/
+	rm ./*.o
