@@ -1,4 +1,4 @@
-#include <screen.h>
+#include "../include/screen.h"
 
 uint16 cursorX = 0,cursorY = 0;
 
