@@ -15,7 +15,7 @@
  *
  * =====================================================================================
  */
-#include <memory.h>
+#include "../include/memory.h"
 
 
 void memcpy( uint8 *source , uint8 *destination , int nbytes)
@@ -37,7 +37,7 @@ void memset( uint8 *source ,  uint8 value , int nbytes )
 void itoa( int number , string str )
 {
 	int num_length = 0;
-	bool sign  = number > 0 ? false : true;
+	uint8 sign  = number > 0 ? 0 : 1;
 	int x = number;
 	
 	do{
@@ -45,7 +45,8 @@ void itoa( int number , string str )
 		x/=10;
 	}while(num_length);
     
-	if( sign ) str[0] = '-' else str[0] = '+';
+	if( sign ) str[0] = '-';
+	else str[0] = '+';
 	
 	str[num_length+1] = '\0';
 	
