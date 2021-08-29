@@ -22,7 +22,7 @@
 
 #include<types.h>
 
-void memcpy( uint8 *source , uint8 *destination , uint8 value);
+void memcpy( uint8 *source , uint8 *destination , int nbytes);
 
 void memset( uint8 *source ,  uint8 value , int nbytes );
 
