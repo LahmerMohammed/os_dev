@@ -29,7 +29,7 @@ drivers/isr.o \
 drivers/system.o \
 
 
-compile: $(OBJS)
+build: $(OBJS)
 	echo "libc compiled successfully ..."
 
 ./string/%.o: ./string/%.c
@@ -42,4 +42,4 @@ compile: $(OBJS)
 	$(CC) $(GCCFLAGS) $< -o $@
 
 clean:
-	rm ./**/*.o
+	rm ./**/*.o 2> /dev/null

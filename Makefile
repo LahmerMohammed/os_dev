@@ -13,23 +13,15 @@ EMULATOR = qemu-system-i386
 EMULATOR_FLAG = -kernel
 
 
-SRCS = ./src/kernel.c ./src/keyboard.c ./src/screen.c ./src/string.c ./src/system.c ./src/idt.c
-
-OBJS =  ./obj/boot.o\
-./obj/kernel.o\
-./obj/keyboard.o\
-./obj/screen.o\
-./obj/system.o\
-./obj/string.o\
-./obj/idt.o\
+OBJ = kernel/boot/kernel.bin  
 
 
 
 
 
 
-run: init
-	$(EMULATOR) $(EMULATOR_FLAG) ./boot/kernel.bin
+run: $(OBJS)
+	$(EMULATOR) $(EMULATOR_FLAG) $(OBJ)
 
 init: compile  $(OBJS)
 	rm -rf boot/
