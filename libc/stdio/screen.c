@@ -3,18 +3,18 @@
 uint16 cursorX = 0,cursorY = 0;
 uint8 text_color = DEFAULT_COLOR;
 
-void clearLine(uint8 start, uint8 end)
+void clearLine(uint8 start_line, uint8 no_lines)
 {
 
-	uint8 no_cell = SCREEN_DEPTH * SCREEN_WIDTH;
 
-	uint16 i = start * no_cell;
+	uint16 i = start_line * SCREEN_WIDTH; // 0
 	string fb = (string)VGA_ADDRESS;
-	uint8 no_line = end - start + 1;
+	
+	uint16 no_cells = no_lines * SCREEN_WIDTH; //
 
-	for (; i < (no_cell * no_line); i++)
+	for (; i < no_cells; i++)
 	{
-		fb[i] = 0x0;
+		fb[i+1] = getTextColor(BLACK,BLACK);
 	}
 }
 
@@ -23,12 +23,12 @@ void updateCursor()
 	uint16 pos = cursorY * SCREEN_WIDTH + cursorX;
 
 	// low  8 bits
-	outportb(0x3D4, 0x0F); 
-	outportb(0x3D5,(uint8)( pos & 0xFF));
+	outportb(0x3D4, 0xF); 
+	outportb(0x3D5,pos & 0x00FF);
 
 	// high  8 bits
-	outportb(0x3D4, 0x0E);
-	outportb(0x3D5,(uint8)(pos >> 8) & 0xFF);
+	outportb(0x3D4, 0xE);
+	outportb(0x3D5,(pos >> 8) & 0x00FF);
 }
 
 void initScreen()
@@ -102,13 +102,12 @@ uint8 getTextColor(uint8 bg, uint8 fg)
   return  ((bg << 4) | 0xF) & (0xF0 | fg);
 }
 
-void write(string str , uint8 _color)
+void write(string str , uint8 color)
 {
 	uint16 str_size = strSize(str);
 
-	if( _color )
-		text_color = _color;
-
+	
+	text_color = color == UNDEFINED ? DEFAULT_COLOR : color;
 
 	for (uint16 i = 0; i < str_size; i++)
 	{
