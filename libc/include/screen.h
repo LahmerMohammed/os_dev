@@ -8,8 +8,8 @@ uint16 cursorX,cursorY;
 #define REG_SCREEN_CRTL 0x3D4
 #define REG_SCREEN_DATA 0x3D5
 
-#define SCREEN_HEIGHT 80
-#define SCREEN_WIDTH 25
+#define SCREEN_HEIGHT 25
+#define SCREEN_WIDTH 80
 #define SCREEN_DEPTH  2
 
 
