@@ -28,9 +28,9 @@ void scrollUp(uint8 no_lines);
 
 void lastLineReach();
 
-void write_char(char ch , uint8 color);
+void write_char(char ch);
 
-void write(string str);
+void write(string str , uint8 _color);
 
 uint8 getTextColor(uint8 bg , uint8 fg);
 
