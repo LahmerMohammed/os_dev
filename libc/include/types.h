@@ -24,5 +24,26 @@ typedef char* string;
 
 #define USER "[mohammed-la]#:"
 
+#define DEFAULT_COLOR 0x0F
+
+enum COLOR {
+  BLACK=0,
+  BLUE,
+  GREEN,
+  CYAN,
+  RED,
+  MAGENTA,
+  BROWN,
+  LIGHTGREY,
+  DARKGREY,
+  LIGHTBLUE,
+  LIGHTGREEN,
+  LIGHTCYAN,
+  LIGHTRED,
+  LIGHTMAGENTA,
+  LIGHTBROWN,
+  WHITE,
+};
+
 
 #endif
