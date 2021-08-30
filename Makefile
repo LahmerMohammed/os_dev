@@ -16,27 +16,23 @@ EMULATOR_FLAG = -kernel
 OBJ = kernel/boot/kernel.bin  
 
 
-
-
-
-
-run: $(OBJS)
+run: $(OBJ)
 	$(EMULATOR) $(EMULATOR_FLAG) $(OBJ)
 
-init: compile  $(OBJS)
-	rm -rf boot/
-	mkdir boot/
-	$(LINKER) $(LDFLAGS) $(OBJS) -o ./boot/kernel.bin 
+#init: compile  $(OBJS)
+#	rm -rf boot/
+#	mkdir boot/
+#	$(LINKER) $(LDFLAGS) $(OBJS) -o ./boot/kernel.bin 
 
-compile: $(SRCS)
-	rm -rf objs/
-	mkdir obj/
+#compile: $(SRCS)
+#	rm -rf objs/
+#	mkdir obj/
 
-./obj/boot.o: ./src/boot.asm 
-	$(ASSEMBLER) $(ASFALGS) $< -o $@ 
+#./obj/boot.o: ./src/boot.asm 
+#	$(ASSEMBLER) $(ASFALGS) $< -o $@ 
 
-./obj/%.o: ./src/%.c
-	$(CC) $(GCCFLAGS) $< -o $@
+#./obj/%.o: ./src/%.c
+#	$(CC) $(GCCFLAGS) $< -o $@
 
 #./obj/keyboard.o: ./src/keyboard.c
 #	$(CC) $(GCCFLAGS) $< -o $@
