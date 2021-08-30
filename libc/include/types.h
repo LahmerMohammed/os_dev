@@ -43,6 +43,7 @@ enum COLOR {
   LIGHTMAGENTA,
   LIGHTBROWN,
   WHITE,
+  UNDEFINED,
 };
 
 
