@@ -4,13 +4,13 @@
 
 void isr_0()
 {
-  print(exception_messages[0]);
+  write(exception_messages[0] , UNDEFINED);
   asm("hlt");
 }
 
 void isr_1()
 {
-  print(exception_messages[1]);
+  write(exception_messages[1] , UNDEFINED);
   asm("hlt");
 }
 
