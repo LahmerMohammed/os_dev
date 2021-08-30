@@ -1,6 +1,7 @@
-#include "../include/screen.h"
+#include <screen.h>
 
 uint16 cursorX = 0,cursorY = 0;
+uint8 text_color = DEFAULT_COLOR;
 
 void clearLine(uint8 start, uint8 end)
 {
@@ -33,8 +34,6 @@ void updateCursor()
 void initScreen()
 {
 	clearScreen();	
-	cursorX = 10;
-	cursorY = 10;
 	updateCursor();
 }
 
@@ -74,22 +73,17 @@ void lastLineReach()
 		scrollUp(1);
 }
 
-void print_char(char ch)
+void write_char(char ch)
 {
 	string fb = (string)VGA_ADDRESS;
 	switch (ch)
 	{
-	case ('\n'):
-		{
-			cursorX = 0;
-			cursorY++;
-			break;
-		}
-	default:
-		{
+	case ('\n'): { cursorX = 0; cursorY++; break;}
+	default: 
+	{
 			uint16 pos = ((cursorY * SCREEN_WIDTH) + cursorX) * SCREEN_DEPTH;
 			fb[pos] = ch;
-			fb[pos + 1] = 0x0F;
+			fb[pos + 1] = text_color;
 			cursorX++;
 			break;
 		}
@@ -103,15 +97,25 @@ void print_char(char ch)
 	updateCursor();
 }
 
-void print(string str)
+uint8 getTextColor(uint8 bg, uint8 fg)
+{
+  return  ((bg << 4) | 0xF) & (0xF0 | fg);
+}
+
+void write(string str , uint8 _color)
 {
 	uint16 str_size = strSize(str);
+
+	if( _color )
+		text_color = _color;
+
+
 	for (uint16 i = 0; i < str_size; i++)
 	{
-		print_char(str[i]);
+		write_char(str[i]);
 	}
-	cursorX += str_size - 1; // -1 : don't add extra space after printing last char
-	updateCursor();
+	//cursorX += str_size - 1; // -1 : don't add extra space after printing last char
+	//updateCursor();
 }
 
 void setCursor(unsigned int row, unsigned int column)
