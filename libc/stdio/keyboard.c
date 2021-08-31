@@ -1,9 +1,10 @@
-#include "../include/keyboard.h"
+#include <keyboard.h>
 
 
+uint8 read_scan_code(void)
+{
+  return inportb(KBDATAP);
+}
 
-
-
-uint8 readInput() {}
 
 
