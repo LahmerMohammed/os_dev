@@ -4,5 +4,6 @@
 void kmain()
 {
 	initScreen();
-	write("Hello" , UNDEFINED);
+	write("Hello \n");
+	
 }

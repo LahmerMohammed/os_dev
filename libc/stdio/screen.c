@@ -102,19 +102,27 @@ uint8 getTextColor(uint8 bg, uint8 fg)
   return  ((bg << 4) | 0xF) & (0xF0 | fg);
 }
 
-void write(string str , uint8 color)
+void write(string str , ...)
 {
-	uint16 str_size = strSize(str);
 
+	va_list args;
+	va_start(args , 1); // expect when optional args
+	uint8 color = va_arg(args , int);
+	va_end(args);
+
+
+	uint16 str_size = strSize(str);
 	
-	text_color = color == UNDEFINED ? DEFAULT_COLOR : color;
+
+	text_color = color == NULL ? DEFAULT_COLOR : color;
 
 	for (uint16 i = 0; i < str_size; i++)
 	{
 		write_char(str[i]);
 	}
-	//cursorX += str_size - 1; // -1 : don't add extra space after printing last char
-	//updateCursor();
+	
+	// set back default color
+	text_color = DEFAULT_COLOR;
 }
 
 void setCursor(unsigned int row, unsigned int column)

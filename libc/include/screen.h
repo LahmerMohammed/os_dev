@@ -1,7 +1,7 @@
 #include "types.h"
 #include "string.h"
 #include "system.h"
-
+#include <stdarg.h>
 uint16 cursorX,cursorY;
 
 
@@ -30,7 +30,7 @@ void lastLineReach();
 
 void write_char(char ch);
 
-void write(string str , uint8 _color);
+void write(string str , ...);
 
 uint8 getTextColor(uint8 bg , uint8 fg);
 
