@@ -5,7 +5,7 @@ void set_idt_entry(uint16 n , uint32 handler ) {
     idt[n].zero = 0x00;
     idt[n].high_offset = (uint16)( (handler >> 16) & 0xFFFF );
 
-    idt[n].selector = 0x08; // no idea
+    idt[n].selector = 0x08;
     idt[n].type_attr = 0xE;
 }
 

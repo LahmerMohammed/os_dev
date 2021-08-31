@@ -2,9 +2,9 @@
 #define KEYBOARD_H
 
 
-#include"screen.h"
-#include"types.h"
-#include"system.h"
+#include<screen.h>
+#include<types.h>
+#include<system.h>
 
 
 // PC keyboard interface constants
@@ -120,6 +120,8 @@ static uint8 ctlmap[256] =
   [0xD2] KEY_INS,   [0xD3] KEY_DEL
 };
 
+
+uint8 read_scan_code(void);
 
 
 #endif
