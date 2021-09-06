@@ -6,6 +6,7 @@ GCCFLAGS = -m32 -c -isystem ./include  -ffreestanding \
 -nostdlib\
 -fno-builtin\
 -fno-exceptions\
+-g
 
 ASFALGS = -felf32
 LDFLAGS = -melf_i386 -T ./src/linker.ld 
@@ -17,6 +18,8 @@ OBJ = kernel/boot/kernel.bin
 
 
 run: $(OBJ)
+#   objcopy --only-keep-debug  $(OBJ) kernel/boot/kernel.sym
+#	objcopy --strip-debug $(OBJ)
 	$(EMULATOR) $(EMULATOR_FLAG) $(OBJ)
 
 #init: compile  $(OBJS)
