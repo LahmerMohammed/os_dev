@@ -10,6 +10,7 @@ GCCFLAGS = -m32 -c -isystem $(LIB_HEADERS)  -ffreestanding \
 -nostdlib\
 -fno-builtin\
 -fno-exceptions\
+-g
 
 ASFALGS = -felf32
 LDFLAGS = -melf_i386 -T $(KERNEL_DIR)/linker.ld 
