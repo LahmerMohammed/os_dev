@@ -1,3 +1,6 @@
 obj/*
 
 boot/*
+.idea/modules.xml
+.idea/os_dev.iml
+.idea/vcs.xml
