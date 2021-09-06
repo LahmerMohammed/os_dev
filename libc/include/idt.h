@@ -7,15 +7,14 @@ typedef struct  {
    uint16 low_offset; // offset bits 0..15
    uint16 selector; // a code segment selector in GDT or LDT
    uint8 zero;      // unused, set to 0
-  //uint8 flags;
    uint8 type_attr; // type ( task,trap or interrupt ) we'll use interrupt
    uint16 high_offset; // offset bits 16..31
 }__attribute__ ((packed)) idt_entry_t;
 
 
 typedef struct {
-  uint32 base;
   uint16 limit;
+  uint32 base;
 }__attribute__ ((packed)) idt_register_t;
 
 
@@ -25,7 +24,7 @@ idt_entry_t idt[IDT_ENTRIES];
 idt_register_t idt_register;
 
 
-void set_idt_entry(uint16 n , uint32 handler);
-void set_idt();
+void add_idt_entry(int n , uint32 handler);
+void install_idt();
 
 #endif
