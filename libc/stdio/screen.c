@@ -104,17 +104,16 @@ uint8 getTextColor(uint8 bg, uint8 fg)
 
 void write(string str , ...)
 {
-
+	/*
 	va_list args;
 	va_start(args , 1); // expect when optional args
 	uint8 color = va_arg(args , int);
 	va_end(args);
-
-
+	text_color = color == NULL ? DEFAULT_COLOR : color;
+	*/
 	uint16 str_size = strSize(str);
 	
 
-	text_color = color == NULL ? DEFAULT_COLOR : color;
 
 	for (uint16 i = 0; i < str_size; i++)
 	{
