@@ -6,6 +6,7 @@ GCCFLAGS = -m32 -c -isystem ./include  -ffreestanding \
 -nostdlib\
 -fno-builtin\
 -fno-exceptions\
+-g
 
 ASFALGS = -felf32
 LDFLAGS = -melf_i386 -T ./src/linker.ld 
@@ -19,6 +20,7 @@ string/string.c \
 drivers/idt.c \
 drivers/isr.c \
 drivers/system.c \
+drivers/gdt.c \
 
 OBJS =./stdio/keyboard.o\
 stdio/screen.o\
@@ -26,6 +28,7 @@ string/string.o\
 string/memory.o \
 drivers/idt.o \
 drivers/isr.o \
+drivers/gdt.o \
 drivers/system.o \
 
 
